@@ -1,0 +1,1819 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+  >
+
+  <title>Galeria</title>
+
+  <style>
+
+    /* =================================
+       RESET
+    ================================= */
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --color-bg: linear-gradient(
+        to top,
+        #00d4ff,
+        #000
+      );
+
+      --line-color: linear-gradient(
+        to left top,
+        #82ff86 20%,
+        #144425,
+        #104e1c
+      );
+
+      --flower-center: radial-gradient(
+        circle,
+        #000,
+        #ff5e00
+      );
+
+      --leaf-color: radial-gradient(
+        circle,
+        #82ff86,
+        #104e1c
+      );
+
+      --petal-color: radial-gradient(
+        circle,
+        #ff5e00,
+        #ffbb00
+      );
+    }
+
+
+    /* =================================
+       PÁGINA
+    ================================= */
+
+    html {
+      width: 100%;
+      min-height: 100%;
+      background: transparent;
+    }
+
+    body {
+      width: 100%;
+      min-height: 100vh;
+      min-height: 100svh;
+
+      background-image: var(--color-bg);
+
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+
+      position: relative;
+
+      overflow-x: hidden;
+
+      font-family: Arial, sans-serif;
+    }
+
+
+    /* =================================
+       FONDO PRINCIPAL bg.jpg
+    ================================= */
+
+    body::before {
+      content: "";
+
+      position: fixed;
+
+      inset: -40px;
+
+      background-image: url("bg.jpg");
+
+      background-size: cover;
+
+      background-position: center;
+
+      background-repeat: no-repeat;
+
+      filter: blur(5px);
+
+      transform: scale(1.08);
+
+      opacity: 0.50;
+
+      z-index: 0;
+
+      pointer-events: none;
+    }
+
+
+    /* =================================
+       CAPA OSCURA
+    ================================= */
+
+    body::after {
+      content: "";
+
+      position: fixed;
+
+      inset: 0;
+
+      background:
+        radial-gradient(
+          circle at center,
+          rgba(255, 187, 0, 0.08),
+          rgba(0, 0, 0, 0.60)
+        );
+
+      z-index: 1;
+
+      pointer-events: none;
+    }
+
+
+    /* =================================
+       TÍTULO
+    ================================= */
+
+    h1.main-title {
+      position: fixed;
+
+      top:
+        max(
+          18px,
+          env(safe-area-inset-top)
+        );
+
+      left: 0;
+
+      width: 100%;
+
+      padding: 0 15px;
+
+      text-align: center;
+
+      color: white;
+
+      font-size: clamp(
+        21px,
+        5vw,
+        28px
+      );
+
+      line-height: 1.2;
+
+      font-weight: 300;
+
+      z-index: 20;
+
+      text-shadow:
+        0 2px 10px rgba(0, 0, 0, 0.8),
+        0 0 20px rgba(255, 187, 0, 0.25);
+
+      pointer-events: none;
+    }
+
+
+    /* =================================
+       GALERÍA
+    ================================= */
+
+    .gallery {
+      position: absolute;
+
+      top: 78px;
+
+      left: 50%;
+
+      transform: translateX(-50%);
+
+      width: min(
+        calc(100% - 30px),
+        700px
+      );
+
+      display: grid;
+
+      grid-template-columns:
+        repeat(6, 1fr);
+
+      gap: 10px;
+
+      padding: 8px;
+
+      z-index: 15;
+    }
+
+
+    .gallery-item {
+      position: relative;
+
+      aspect-ratio: 1 / 1;
+
+      overflow: hidden;
+
+      border-radius: 14px;
+
+      cursor: pointer;
+
+      border:
+        2px solid
+        rgba(255, 255, 255, 0.25);
+
+      background:
+        rgba(255, 255, 255, 0.08);
+
+      box-shadow:
+        0 5px 20px
+        rgba(0, 0, 0, 0.35);
+
+      transition:
+        transform 0.3s ease,
+        border 0.3s ease;
+
+      -webkit-tap-highlight-color:
+        transparent;
+    }
+
+
+    .gallery-item:hover {
+      transform:
+        translateY(-5px)
+        scale(1.03);
+
+      border:
+        2px solid
+        rgba(255, 187, 0, 0.8);
+    }
+
+
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+
+      object-fit: cover;
+
+      display: block;
+
+      transition:
+        transform 0.5s ease;
+    }
+
+
+    .gallery-item:hover img {
+      transform:
+        scale(1.08);
+    }
+
+
+    /* =================================
+       FLOR
+    ================================= */
+
+    .flower_wrapper {
+      position: absolute;
+
+      left: 50%;
+
+      bottom: 15px;
+
+      transform:
+        translateX(-50%);
+
+      z-index: 6;
+    }
+
+
+    .flower_stem {
+      width: 20px;
+
+      height: 400px;
+
+      background-image:
+        var(--line-color);
+
+      border-radius: 20px;
+    }
+
+
+    .flower_center {
+      position: absolute;
+
+      top: -93px;
+
+      left: 50%;
+
+      transform:
+        translateX(-50%);
+
+      width: 150px;
+      height: 150px;
+
+      border-radius: 50%;
+
+      background:
+        var(--flower-center);
+
+      z-index: 5;
+
+      opacity: 0;
+
+      animation:
+        open-flower-center
+        1s
+        ease-out
+        forwards;
+
+      animation-delay: 1s;
+
+      box-shadow:
+        0 0 20px
+        rgba(255, 187, 0, 0.4),
+
+        0 0 50px
+        rgba(255, 94, 0, 0.25);
+    }
+
+
+    /* =================================
+       PÉTALOS
+    ================================= */
+
+    .flower_petal {
+      position: absolute;
+
+      width: 70px;
+      height: 140px;
+
+      background:
+        var(--petal-color);
+
+      clip-path:
+        ellipse(
+          35% 50%
+          at 50% 50%
+        );
+
+      top: -40%;
+
+      left: 50%;
+
+      transform-origin:
+        center bottom;
+
+      opacity: 0;
+
+      animation:
+        open-flower-petal
+        1s
+        ease-out
+        forwards;
+    }
+
+
+    .flower_petal-1 {
+      --rotate-deg: 0deg;
+      animation-delay: 1.2s;
+    }
+
+    .flower_petal-2 {
+      --rotate-deg: 30deg;
+      animation-delay: 1.25s;
+    }
+
+    .flower_petal-3 {
+      --rotate-deg: 60deg;
+      animation-delay: 1.3s;
+    }
+
+    .flower_petal-4 {
+      --rotate-deg: 90deg;
+      animation-delay: 1.35s;
+    }
+
+    .flower_petal-5 {
+      --rotate-deg: 120deg;
+      animation-delay: 1.4s;
+    }
+
+    .flower_petal-6 {
+      --rotate-deg: 150deg;
+      animation-delay: 1.45s;
+    }
+
+    .flower_petal-7 {
+      --rotate-deg: 180deg;
+      animation-delay: 1.5s;
+    }
+
+    .flower_petal-8 {
+      --rotate-deg: 210deg;
+      animation-delay: 1.55s;
+    }
+
+    .flower_petal-9 {
+      --rotate-deg: 240deg;
+      animation-delay: 1.6s;
+    }
+
+    .flower_petal-10 {
+      --rotate-deg: 270deg;
+      animation-delay: 1.65s;
+    }
+
+    .flower_petal-11 {
+      --rotate-deg: 300deg;
+      animation-delay: 1.7s;
+    }
+
+    .flower_petal-12 {
+      --rotate-deg: 330deg;
+      animation-delay: 1.75s;
+    }
+
+
+    /* =================================
+       HOJAS
+    ================================= */
+
+    .flower_leaf {
+      position: absolute;
+
+      width: 70px;
+      height: 120px;
+
+      background:
+        var(--leaf-color);
+
+      border-radius:
+        100px 20px 100px 20px;
+
+      transform-origin:
+        center bottom;
+    }
+
+
+    .flower_leaf-1 {
+      left: 60%;
+
+      bottom: 150px;
+
+      transform:
+        translateX(-45%)
+        rotate(80deg);
+    }
+
+
+    .flower_leaf-2 {
+      left: 60%;
+
+      bottom: 200px;
+
+      transform:
+        translateX(-55%)
+        rotate(-80deg);
+    }
+
+
+    /* =================================
+       ANIMACIONES FLOR
+    ================================= */
+
+    @keyframes open-flower-petal {
+
+      0% {
+        transform:
+          translateX(-50%)
+          translateY(50px)
+          rotate(0deg);
+
+        opacity: 0;
+      }
+
+      50% {
+        opacity: 1;
+      }
+
+      100% {
+        transform:
+          translateX(-50%)
+          translateY(0)
+          rotate(var(--rotate-deg));
+
+        opacity: 1;
+      }
+    }
+
+
+    @keyframes open-flower-center {
+
+      0% {
+        transform:
+          translateX(-50%)
+          scale(0);
+
+        opacity: 0;
+      }
+
+      100% {
+        transform:
+          translateX(-50%)
+          scale(1);
+
+        opacity: 1;
+      }
+    }
+
+
+    /* =================================
+       LUCES
+    ================================= */
+
+    .light {
+      position: absolute;
+
+      bottom: 0;
+
+      width: 10px;
+      height: 10px;
+
+      background-color:
+        rgb(255, 251, 0);
+
+      border-radius: 50%;
+
+      filter: blur(2px);
+
+      animation:
+        light-ans-background
+        7s
+        linear
+        infinite
+        backwards;
+
+      z-index: 7;
+
+      pointer-events: none;
+    }
+
+
+    .light-1 {
+      left: 10%;
+      animation-delay: 1s;
+    }
+
+    .light-2 {
+      left: 20%;
+      animation-delay: 0.5s;
+    }
+
+    .light-3 {
+      left: 60%;
+      animation-delay: 0.3s;
+    }
+
+    .light-4 {
+      left: 80%;
+      animation-delay: 0.9s;
+    }
+
+    .light-5 {
+      left: 45%;
+      animation-delay: 1.5s;
+    }
+
+    .light-6 {
+      left: 15%;
+      animation-delay: 3s;
+    }
+
+    .light-7 {
+      left: 90%;
+      animation-delay: 2s;
+    }
+
+    .light-8 {
+      left: 65%;
+      animation-delay: 3.5s;
+    }
+
+    .light-9 {
+      left: 70%;
+      animation-delay: 2s;
+    }
+
+    .light-10 {
+      left: 95%;
+      animation-delay: 3.5s;
+    }
+
+    .light-11 {
+      left: 75%;
+      animation-delay: 3s;
+    }
+
+    .light-12 {
+      left: 85%;
+      animation-delay: 0.5s;
+    }
+
+
+    @keyframes light-ans-background {
+
+      0% {
+        opacity: 0;
+
+        transform:
+          translateY(0)
+          translateX(0);
+      }
+
+      25% {
+        opacity: 1;
+
+        transform:
+          translateY(-100px)
+          translateX(10px);
+      }
+
+      50% {
+        transform:
+          translateY(-200px)
+          translateX(-10px);
+      }
+
+      75% {
+        transform:
+          translateY(-400px)
+          translateX(15px);
+      }
+
+      100% {
+        opacity: 0;
+
+        transform:
+          translateY(-600px)
+          translateX(-5px);
+      }
+    }
+
+
+    /* =================================
+       BOTÓN
+    ================================= */
+
+    .flower-btn {
+      position: fixed;
+
+      left: 50%;
+
+      bottom:
+        calc(
+          18px +
+          env(safe-area-inset-bottom)
+        );
+
+      transform:
+        translateX(-50%);
+
+      padding:
+        14px 30px;
+
+      font-size: 17px;
+
+      font-weight: 600;
+
+      color: white;
+
+      background:
+        linear-gradient(
+          45deg,
+          #ffbb00,
+          #ff5e00
+        );
+
+      border: none;
+
+      border-radius: 50px;
+
+      cursor: pointer;
+
+      box-shadow:
+        0 8px 15px
+        rgba(0, 0, 0, 0.3);
+
+      transition: 0.3s;
+
+      position: fixed;
+
+      z-index: 999;
+
+      white-space: nowrap;
+
+      -webkit-tap-highlight-color:
+        transparent;
+    }
+
+
+    .flower-btn:hover {
+      transform:
+        translateX(-50%)
+        translateY(-3px);
+
+      box-shadow:
+        0 12px 20px
+        rgba(0, 0, 0, 0.4);
+    }
+
+
+    .flower-btn:active {
+      transform:
+        translateX(-50%)
+        scale(0.96);
+    }
+
+
+    /* =================================
+       LIGHTBOX
+    ================================= */
+
+    .lightbox {
+      position: fixed;
+
+      inset: 0;
+
+      width: 100%;
+      height: 100%;
+
+      background:
+        rgba(0, 0, 0, 0.90);
+
+      backdrop-filter:
+        blur(12px);
+
+      -webkit-backdrop-filter:
+        blur(12px);
+
+      display: flex;
+
+      align-items: center;
+      justify-content: center;
+
+      opacity: 0;
+
+      visibility: hidden;
+
+      transition:
+        opacity 0.3s ease;
+
+      z-index: 9999;
+
+      padding:
+        60px 15px;
+    }
+
+
+    .lightbox.active {
+      opacity: 1;
+
+      visibility: visible;
+    }
+
+
+    .lightbox-image {
+      display: block;
+
+      max-width: 90vw;
+
+      max-height: 82vh;
+
+      width: auto;
+      height: auto;
+
+      object-fit: contain;
+
+      border-radius: 12px;
+
+      box-shadow:
+        0 20px 80px
+        rgba(0, 0, 0, 0.7);
+
+      transform:
+        scale(0.9);
+
+      transition:
+        transform 0.35s ease;
+    }
+
+
+    .lightbox.active
+    .lightbox-image {
+      transform:
+        scale(1);
+    }
+
+
+    /* =================================
+       BOTÓN CERRAR
+    ================================= */
+
+    .lightbox-close {
+      position: absolute;
+
+      top:
+        max(
+          15px,
+          env(safe-area-inset-top)
+        );
+
+      right: 15px;
+
+      width: 45px;
+      height: 45px;
+
+      border: none;
+
+      border-radius: 50%;
+
+      background:
+        rgba(255, 255, 255, 0.12);
+
+      color: white;
+
+      font-size: 30px;
+
+      cursor: pointer;
+
+      z-index: 10001;
+
+      transition: 0.3s;
+    }
+
+
+    .lightbox-close:hover {
+      background:
+        rgba(255, 187, 0, 0.8);
+
+      transform:
+        rotate(90deg);
+    }
+
+
+    /* =================================
+       FLECHAS
+    ================================= */
+
+    .lightbox-prev,
+    .lightbox-next {
+      position: absolute;
+
+      top: 50%;
+
+      transform:
+        translateY(-50%);
+
+      width: 50px;
+      height: 50px;
+
+      border: none;
+
+      border-radius: 50%;
+
+      background:
+        rgba(255, 255, 255, 0.12);
+
+      color: white;
+
+      font-size: 30px;
+
+      cursor: pointer;
+
+      z-index: 10001;
+
+      transition: 0.3s;
+    }
+
+
+    .lightbox-prev {
+      left: 15px;
+    }
+
+
+    .lightbox-next {
+      right: 15px;
+    }
+
+
+    .lightbox-prev:hover,
+    .lightbox-next:hover {
+      background:
+        rgba(255, 187, 0, 0.8);
+    }
+
+
+    /* =================================
+       TEXTO DE FOTO
+    ================================= */
+
+    .lightbox-caption {
+      position: absolute;
+
+      bottom:
+        calc(
+          20px +
+          env(safe-area-inset-bottom)
+        );
+
+      left: 50%;
+
+      transform:
+        translateX(-50%);
+
+      width:
+        calc(100% - 120px);
+
+      max-width: 500px;
+
+      color: white;
+
+      font-size: 15px;
+
+      line-height: 1.3;
+
+      text-align: center;
+
+      background:
+        rgba(0, 0, 0, 0.45);
+
+      padding:
+        8px 18px;
+
+      border-radius: 20px;
+
+      backdrop-filter:
+        blur(8px);
+    }
+
+
+    /* =================================
+       TABLET
+    ================================= */
+
+    @media (max-width: 900px) {
+
+      .gallery {
+        width:
+          calc(100% - 30px);
+
+        grid-template-columns:
+          repeat(3, 1fr);
+
+        gap: 8px;
+      }
+
+      .flower_stem {
+        height: 350px;
+      }
+
+      .flower_center {
+        width: 130px;
+        height: 130px;
+
+        top: -80px;
+      }
+
+      .flower_petal {
+        width: 60px;
+        height: 120px;
+      }
+    }
+
+
+    /* =================================
+       CELULAR
+    ================================= */
+
+    @media (max-width: 600px) {
+
+      h1.main-title {
+        top:
+          max(
+            14px,
+            env(safe-area-inset-top)
+          );
+
+        font-size: 21px;
+
+        padding:
+          0 12px;
+      }
+
+
+      .gallery {
+        top: 64px;
+
+        width:
+          calc(100% - 20px);
+
+        padding: 4px;
+
+        gap: 6px;
+
+        grid-template-columns:
+          repeat(3, 1fr);
+      }
+
+
+      .gallery-item {
+        border-radius: 11px;
+
+        border-width: 1.5px;
+      }
+
+
+      .flower_wrapper {
+        bottom:
+          calc(
+            72px +
+            env(safe-area-inset-bottom)
+          );
+      }
+
+
+      .flower_stem {
+        width: 15px;
+
+        height: 255px;
+      }
+
+
+      .flower_center {
+        width: 105px;
+        height: 105px;
+
+        top: -65px;
+      }
+
+
+      .flower_petal {
+        width: 50px;
+        height: 100px;
+      }
+
+
+      .flower_leaf {
+        width: 55px;
+        height: 95px;
+      }
+
+
+      .flower_leaf-1 {
+        bottom: 110px;
+      }
+
+
+      .flower_leaf-2 {
+        bottom: 145px;
+      }
+
+
+      .flower-btn {
+        bottom:
+          calc(
+            14px +
+            env(safe-area-inset-bottom)
+          );
+
+        padding:
+          12px 27px;
+
+        font-size: 16px;
+      }
+
+
+      .lightbox {
+        padding:
+          60px 10px;
+      }
+
+
+      .lightbox-image {
+        max-width: 88vw;
+
+        max-height: 75vh;
+
+        border-radius: 9px;
+      }
+
+
+      .lightbox-close {
+        top:
+          max(
+            12px,
+            env(safe-area-inset-top)
+          );
+
+        right: 12px;
+
+        width: 42px;
+        height: 42px;
+
+        font-size: 27px;
+      }
+
+
+      .lightbox-prev,
+      .lightbox-next {
+        width: 42px;
+        height: 42px;
+
+        font-size: 25px;
+      }
+
+
+      .lightbox-prev {
+        left: 8px;
+      }
+
+
+      .lightbox-next {
+        right: 8px;
+      }
+
+
+      .lightbox-caption {
+        bottom:
+          calc(
+            12px +
+            env(safe-area-inset-bottom)
+          );
+
+        width:
+          calc(100% - 100px);
+
+        font-size: 14px;
+
+        padding:
+          7px 12px;
+      }
+    }
+
+
+    /* =================================
+       CELULARES PEQUEÑOS
+    ================================= */
+
+    @media (max-width: 380px) {
+
+      h1.main-title {
+        font-size: 19px;
+      }
+
+
+      .gallery {
+        top: 59px;
+
+        width:
+          calc(100% - 14px);
+
+        gap: 5px;
+      }
+
+
+      .gallery-item {
+        border-radius: 9px;
+      }
+
+
+      .flower_wrapper {
+        bottom:
+          calc(
+            68px +
+            env(safe-area-inset-bottom)
+          );
+      }
+
+
+      .flower_stem {
+        height: 220px;
+      }
+
+
+      .flower_center {
+        width: 90px;
+        height: 90px;
+
+        top: -55px;
+      }
+
+
+      .flower_petal {
+        width: 44px;
+        height: 88px;
+      }
+
+
+      .flower_leaf {
+        width: 48px;
+        height: 82px;
+      }
+    }
+
+
+    /* =================================
+       PANTALLAS BAJAS
+    ================================= */
+
+    @media
+      (max-height: 700px)
+      and (max-width: 600px) {
+
+      .gallery {
+        top: 57px;
+      }
+
+
+      .flower_wrapper {
+        bottom:
+          calc(
+            65px +
+            env(safe-area-inset-bottom)
+          );
+      }
+
+
+      .flower_stem {
+        height: 185px;
+      }
+
+
+      .flower_center {
+        width: 80px;
+        height: 80px;
+
+        top: -50px;
+      }
+
+
+      .flower_petal {
+        width: 40px;
+        height: 80px;
+      }
+
+
+      .flower_leaf {
+        display: none;
+      }
+    }
+
+  </style>
+</head>
+
+
+<body>
+
+
+  <!-- =================================
+       AUDIO
+  ================================= -->
+
+  <audio
+    id="id_audio"
+    src="Sweet_Woman-Edit.mp3"
+    preload="auto"
+  ></audio>
+
+
+  <!-- =================================
+       TÍTULO
+  ================================= -->
+
+  <h1 class="main-title">
+    Con mucho amor J.C.
+  </h1>
+
+
+  <!-- =================================
+       GALERÍA
+  ================================= -->
+
+  <div class="gallery">
+
+    <div
+      class="gallery-item"
+      data-image="img1.jpeg"
+      data-title="Nuestro momento ❤️"
+    >
+      <img
+        src="img1.jpeg"
+        alt="Foto 1"
+      >
+    </div>
+
+
+    <div
+      class="gallery-item"
+      data-image="img2.jpeg"
+      data-title="Un recuerdo especial ✨"
+    >
+      <img
+        src="img2.jpeg"
+        alt="Foto 2"
+      >
+    </div>
+
+
+    <div
+      class="gallery-item"
+      data-image="img3.jpeg"
+      data-title="Para siempre 💛"
+    >
+      <img
+        src="img3.jpeg"
+        alt="Foto 3"
+      >
+    </div>
+
+
+    <div
+      class="gallery-item"
+      data-image="img4.jpeg"
+      data-title="De nuestras primeras fotos"
+    >
+      <img
+        src="img4.jpeg"
+        alt="Foto 4"
+      >
+    </div>
+
+
+    <div
+      class="gallery-item"
+      data-image="img7.jpeg"
+      data-title="Un recuerdo más ❤️"
+    >
+      <img
+        src="img7.jpeg"
+        alt="Foto 5"
+      >
+    </div>
+
+
+    <div
+      class="gallery-item"
+      data-image="img6.jpeg"
+      data-title="Con mucho amor"
+    >
+      <img
+        src="img6.jpeg"
+        alt="Foto 6"
+      >
+    </div>
+
+  </div>
+
+
+  <!-- =================================
+       LUCES
+  ================================= -->
+
+  <div class="light light-1"></div>
+  <div class="light light-2"></div>
+  <div class="light light-3"></div>
+  <div class="light light-4"></div>
+  <div class="light light-5"></div>
+  <div class="light light-6"></div>
+  <div class="light light-7"></div>
+  <div class="light light-8"></div>
+  <div class="light light-9"></div>
+  <div class="light light-10"></div>
+  <div class="light light-11"></div>
+  <div class="light light-12"></div>
+
+
+  <!-- =================================
+       FLOR
+  ================================= -->
+
+  <div class="flower_wrapper">
+
+    <div class="flower_stem">
+
+      <div class="flower_petal flower_petal-1"></div>
+      <div class="flower_petal flower_petal-2"></div>
+      <div class="flower_petal flower_petal-3"></div>
+      <div class="flower_petal flower_petal-4"></div>
+      <div class="flower_petal flower_petal-5"></div>
+      <div class="flower_petal flower_petal-6"></div>
+      <div class="flower_petal flower_petal-7"></div>
+      <div class="flower_petal flower_petal-8"></div>
+      <div class="flower_petal flower_petal-9"></div>
+      <div class="flower_petal flower_petal-10"></div>
+      <div class="flower_petal flower_petal-11"></div>
+      <div class="flower_petal flower_petal-12"></div>
+
+      <div class="flower_center"></div>
+
+      <div class="flower_leaf flower_leaf-1"></div>
+      <div class="flower_leaf flower_leaf-2"></div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =================================
+       BOTÓN
+  ================================= -->
+
+  <button
+    class="flower-btn"
+    type="button"
+  >
+    Clic aquí
+  </button>
+
+
+  <!-- =================================
+       LIGHTBOX
+  ================================= -->
+
+  <div
+    class="lightbox"
+    id="lightbox"
+  >
+
+    <button
+      class="lightbox-close"
+      id="lightboxClose"
+      type="button"
+      aria-label="Cerrar"
+    >
+      ×
+    </button>
+
+
+    <button
+      class="lightbox-prev"
+      id="lightboxPrev"
+      type="button"
+      aria-label="Imagen anterior"
+    >
+      ‹
+    </button>
+
+
+    <img
+      class="lightbox-image"
+      id="lightboxImage"
+      src=""
+      alt=""
+    >
+
+
+    <button
+      class="lightbox-next"
+      id="lightboxNext"
+      type="button"
+      aria-label="Imagen siguiente"
+    >
+      ›
+    </button>
+
+
+    <div
+      class="lightbox-caption"
+      id="lightboxCaption"
+    ></div>
+
+  </div>
+
+
+  <!-- =================================
+       JAVASCRIPT
+  ================================= -->
+
+  <script>
+
+    /* =================================
+       AUDIO
+    ================================= */
+
+    const flowerBtn =
+      document.querySelector(
+        ".flower-btn"
+      );
+
+    const audio =
+      document.getElementById(
+        "id_audio"
+      );
+
+
+    flowerBtn.addEventListener(
+      "click",
+      () => {
+
+        audio.volume = 0.5;
+
+        audio.play().catch(() => {});
+
+      }
+    );
+
+
+    /* =================================
+       GALERÍA
+    ================================= */
+
+    const galleryItems =
+      document.querySelectorAll(
+        ".gallery-item"
+      );
+
+    const lightbox =
+      document.getElementById(
+        "lightbox"
+      );
+
+    const lightboxImage =
+      document.getElementById(
+        "lightboxImage"
+      );
+
+    const lightboxCaption =
+      document.getElementById(
+        "lightboxCaption"
+      );
+
+    const closeBtn =
+      document.getElementById(
+        "lightboxClose"
+      );
+
+    const prevBtn =
+      document.getElementById(
+        "lightboxPrev"
+      );
+
+    const nextBtn =
+      document.getElementById(
+        "lightboxNext"
+      );
+
+
+    let currentIndex = 0;
+
+
+    /* =================================
+       ABRIR IMAGEN
+    ================================= */
+
+    function openImage(index) {
+
+      currentIndex = index;
+
+      const item =
+        galleryItems[currentIndex];
+
+      const image =
+        item.dataset.image;
+
+      const title =
+        item.dataset.title;
+
+      lightboxImage.src = image;
+
+      lightboxImage.alt = title;
+
+      lightboxCaption.textContent =
+        title;
+
+      lightbox.classList.add(
+        "active"
+      );
+
+      document.body.style.overflow =
+        "hidden";
+    }
+
+
+    /* =================================
+       CERRAR
+    ================================= */
+
+    function closeLightbox() {
+
+      lightbox.classList.remove(
+        "active"
+      );
+
+      document.body.style.overflow =
+        "";
+    }
+
+
+    /* =================================
+       SIGUIENTE
+    ================================= */
+
+    function nextImage() {
+
+      currentIndex++;
+
+      if (
+        currentIndex >=
+        galleryItems.length
+      ) {
+        currentIndex = 0;
+      }
+
+      openImage(currentIndex);
+    }
+
+
+    /* =================================
+       ANTERIOR
+    ================================= */
+
+    function previousImage() {
+
+      currentIndex--;
+
+      if (
+        currentIndex < 0
+      ) {
+        currentIndex =
+          galleryItems.length - 1;
+      }
+
+      openImage(currentIndex);
+    }
+
+
+    /* =================================
+       CLICK EN FOTOS
+    ================================= */
+
+    galleryItems.forEach(
+      (item, index) => {
+
+        item.addEventListener(
+          "click",
+          () => {
+            openImage(index);
+          }
+        );
+
+      }
+    );
+
+
+    /* =================================
+       BOTONES
+    ================================= */
+
+    closeBtn.addEventListener(
+      "click",
+      closeLightbox
+    );
+
+
+    nextBtn.addEventListener(
+      "click",
+      nextImage
+    );
+
+
+    prevBtn.addEventListener(
+      "click",
+      previousImage
+    );
+
+
+    /* =================================
+       CLICK FUERA DE LA FOTO
+    ================================= */
+
+    lightbox.addEventListener(
+      "click",
+      (event) => {
+
+        if (
+          event.target === lightbox
+        ) {
+          closeLightbox();
+        }
+
+      }
+    );
+
+
+    /* =================================
+       TECLADO
+    ================================= */
+
+    document.addEventListener(
+      "keydown",
+      (event) => {
+
+        if (
+          !lightbox.classList.contains(
+            "active"
+          )
+        ) {
+          return;
+        }
+
+
+        if (
+          event.key === "Escape"
+        ) {
+          closeLightbox();
+        }
+
+
+        if (
+          event.key === "ArrowRight"
+        ) {
+          nextImage();
+        }
+
+
+        if (
+          event.key === "ArrowLeft"
+        ) {
+          previousImage();
+        }
+
+      }
+    );
+
+
+    /* =================================
+       SWIPE EN CELULAR
+    ================================= */
+
+    let touchStartX = 0;
+
+    let touchEndX = 0;
+
+
+    lightbox.addEventListener(
+      "touchstart",
+      (event) => {
+
+        touchStartX =
+          event.changedTouches[0]
+            .screenX;
+
+      },
+      {
+        passive: true
+      }
+    );
+
+
+    lightbox.addEventListener(
+      "touchend",
+      (event) => {
+
+        touchEndX =
+          event.changedTouches[0]
+            .screenX;
+
+        const difference =
+          touchStartX - touchEndX;
+
+
+        if (
+          Math.abs(difference) > 50
+        ) {
+
+          if (difference > 0) {
+            nextImage();
+          } else {
+            previousImage();
+          }
+
+        }
+
+      },
+      {
+        passive: true
+      }
+    );
+
+  </script>
+
+</body>
+</html>
